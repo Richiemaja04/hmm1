@@ -1,0 +1,258 @@
+<!-- ========================================== -->
+<!-- templates/calibration.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behavioral Calibration - Authentication Agent</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="calibration-page">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-shield-alt"></i>
+            <span>Authentication Agent</span>
+        </div>
+        <div class="nav-user">
+            <span id="userWelcome">Calibration Setup</span>
+            <button class="btn btn-text" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </nav>
+    
+    <div class="calibration-container">
+        <div class="calibration-header">
+            <h1>Behavioral Profile Setup</h1>
+            <p>Help us learn your unique typing and interaction patterns for enhanced security</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0% Complete</span>
+            </div>
+        </div>
+        
+        <div class="calibration-content">
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="calibration-screen active">
+                <div class="welcome-card">
+                    <div class="welcome-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h2>Welcome to Calibration</h2>
+                    <p>We'll guide you through a series of tasks to create your unique behavioral profile. 
+                       This process takes about 5-10 minutes and is essential for your account security.</p>
+                    
+                    <div class="calibration-steps">
+                        <div class="step">
+                            <i class="fas fa-keyboard"></i>
+                            <h3>Typing Samples</h3>
+                            <p>Type provided text naturally at your normal speed</p>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-mouse-pointer"></i>
+                            <h3>Mouse Interactions</h3>
+                            <p>Complete navigation tasks with your usual patterns</p>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-brain"></i>
+                            <h3>Pattern Analysis</h3>
+                            <p>Our AI learns your unique behavioral signature</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-large" id="startCalibrationBtn">
+                        <i class="fas fa-play"></i>
+                        Start Calibration
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Task Screen -->
+            <div id="taskScreen" class="calibration-screen">
+                <div class="task-card">
+                    <div class="task-header">
+                        <div class="task-info">
+                            <span class="task-number" id="taskNumber">Task 1 of 5</span>
+                            <h2 id="taskTitle">Typing Sample</h2>
+                        </div>
+                        <div class="task-timer">
+                            <i class="fas fa-clock"></i>
+                            <span id="taskTimer">0:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="task-instruction">
+                        <p id="taskInstruction">Please type the following text naturally:</p>
+                    </div>
+                    
+                    <div class="task-content">
+                        <div class="reference-text" id="referenceText">
+                            <!-- Text to be typed will be inserted here -->
+                        </div>
+                        
+                        <div class="input-area">
+                            <textarea id="typingArea" placeholder="Start typing here..." 
+                                     rows="5" spellcheck="false"></textarea>
+                        </div>
+                        
+                        <!-- Mouse Task Area (hidden by default) -->
+                        <div id="mouseTaskArea" class="mouse-task-area hidden">
+                            <div class="click-sequence" id="clickSequence">
+                                <!-- Clickable buttons will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-controls">
+                        <button class="btn btn-secondary" id="skipTaskBtn">
+                            <i class="fas fa-forward"></i>
+                            Skip Task
+                        </button>
+                        <button class="btn btn-primary" id="completeTaskBtn" disabled>
+                            <i class="fas fa-check"></i>
+                            Complete Task
+                        </button>
+                    </div>
+                    
+                    <div class="task-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Characters:</span>
+                            <span class="metric-value" id="charCount">0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">WPM:</span>
+                            <span class="metric-value" id="wpmCount">0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Accuracy:</span>
+                            <span class="metric-value" id="accuracyCount">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Processing Screen -->
+            <div id="processingScreen" class="calibration-screen">
+                <div class="processing-card">
+                    <div class="processing-animation">
+                        <div class="brain-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="processing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    
+                    <h2>Training Your Security Profile</h2>
+                    <p id="processingMessage">Analyzing your behavioral patterns...</p>
+                    
+                    <div class="processing-steps">
+                        <div class="processing-step active" id="step1">
+                            <i class="fas fa-check"></i>
+                            <span>Data collection complete</span>
+                        </div>
+                        <div class="processing-step" id="step2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Extracting behavioral features</span>
+                        </div>
+                        <div class="processing-step" id="step3">
+                            <i class="fas fa-hourglass-half"></i>
+                            <span>Training machine learning models</span>
+                        </div>
+                        <div class="processing-step" id="step4">
+                            <i class="fas fa-hourglass-half"></i>
+                            <span>Validating security profile</span>
+                        </div>
+                    </div>
+                    
+                    <div class="processing-time">
+                        <small>This process may take 1-2 minutes...</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Completion Screen -->
+            <div id="completionScreen" class="calibration-screen">
+                <div class="completion-card">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Calibration Complete!</h2>
+                    <p>Your behavioral security profile has been successfully created. 
+                       You can now use continuous authentication for enhanced security.</p>
+                    
+                    <div class="calibration-summary">
+                        <div class="summary-item">
+                            <i class="fas fa-keyboard"></i>
+                            <div>
+                                <strong>Typing Profile</strong>
+                                <span id="typingAccuracy">95% accuracy</span>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <i class="fas fa-mouse-pointer"></i>
+                            <div>
+                                <strong>Mouse Profile</strong>
+                                <span id="mouseAccuracy">92% accuracy</span>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <strong>Security Level</strong>
+                                <span id="securityLevel">High</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-large" id="continueToApp">
+                        <i class="fas fa-arrow-right"></i>
+                        Continue to Dashboard
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Error Screen -->
+            <div id="errorScreen" class="calibration-screen">
+                <div class="error-card">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2>Calibration Error</h2>
+                    <p id="errorMessage">An error occurred during calibration. Please try again.</p>
+                    
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryCalibrationBtn">
+                            <i class="fas fa-redo"></i>
+                            Retry Calibration
+                        </button>
+                        <button class="btn btn-secondary" id="skipCalibrationBtn">
+                            <i class="fas fa-forward"></i>
+                            Skip for Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Data Quality Indicator -->
+        <div class="data-quality-indicator" id="dataQuality">
+            <div class="quality-label">Data Quality:</div>
+            <div class="quality-bar">
+                <div class="quality-fill" id="qualityFill"></div>
+            </div>
+            <span class="quality-text" id="qualityText">Good</span>
+        </div>
+    </div>
+    
+    <script src="/static/js/calibration.js"></script>
+</body>
+</html>

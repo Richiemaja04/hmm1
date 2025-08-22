@@ -1,0 +1,266 @@
+<!-- templates/challenge.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Challenge - Authentication Agent</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="challenge-page">
+    <div class="challenge-container">
+        <div class="challenge-header">
+            <div class="security-badge">
+                <i class="fas fa-shield-exclamation"></i>
+            </div>
+            <h1>Security Verification Required</h1>
+            <p id="challengeReason">Your behavioral pattern has triggered our security system. Please complete this verification to continue.</p>
+        </div>
+        
+        <div class="challenge-content">
+            <!-- High Risk Challenge -->
+            <div id="highRiskChallenge" class="challenge-type active">
+                <div class="alert-banner alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>High-risk activity detected. Immediate verification required.</span>
+                </div>
+                
+                <div class="challenge-instructions">
+                    <h3>Verification Challenge</h3>
+                    <p>Type the following text exactly as shown to verify your identity:</p>
+                </div>
+                
+                <div class="reference-text-container">
+                    <div class="reference-text" id="challengeText">
+                        <!-- Challenge text will be inserted here -->
+                    </div>
+                    <button class="copy-text-btn" id="copyTextBtn" title="Copy text">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                
+                <div class="typing-area-container">
+                    <textarea id="challengeInput" 
+                              placeholder="Start typing the text above..." 
+                              rows="4" 
+                              spellcheck="false"
+                              autocomplete="off"></textarea>
+                </div>
+                
+                <div class="challenge-metrics">
+                    <div class="metric">
+                        <i class="fas fa-keyboard"></i>
+                        <span class="metric-label">Characters:</span>
+                        <span class="metric-value" id="charCount">0 / 0</span>
+                    </div>
+                    <div class="metric">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="metric-label">Speed:</span>
+                        <span class="metric-value" id="typingSpeed">0 WPM</span>
+                    </div>
+                    <div class="metric">
+                        <i class="fas fa-percentage"></i>
+                        <span class="metric-label">Accuracy:</span>
+                        <span class="metric-value" id="typingAccuracy">100%</span>
+                    </div>
+                    <div class="metric">
+                        <i class="fas fa-clock"></i>
+                        <span class="metric-label">Time:</span>
+                        <span class="metric-value" id="challengeTime">0:00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Adaptive Challenge -->
+            <div id="adaptiveChallenge" class="challenge-type">
+                <div class="alert-banner alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Behavioral drift detected. Help us adapt to your current patterns.</span>
+                </div>
+                
+                <div class="challenge-instructions">
+                    <h3>Pattern Adaptation</h3>
+                    <p>Your typing patterns have evolved. Please complete this longer text sample to help us update your profile:</p>
+                </div>
+                
+                <div class="adaptive-content">
+                    <div class="reference-paragraph" id="adaptiveParagraph">
+                        <!-- Longer text for adaptation will be inserted here -->
+                    </div>
+                    
+                    <div class="adaptive-typing-area">
+                        <textarea id="adaptiveInput" 
+                                  placeholder="Copy the paragraph above at your natural typing speed..." 
+                                  rows="8" 
+                                  spellcheck="false"
+                                  autocomplete="off"></textarea>
+                    </div>
+                </div>
+                
+                <div class="adaptation-progress">
+                    <div class="progress-label">Adaptation Progress</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="adaptationProgress"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="adaptationPercent">0%</span>
+                        <span>Minimum 80% required</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Challenge Loading -->
+            <div id="challengeLoading" class="challenge-loading hidden">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p>Generating security challenge...</p>
+            </div>
+        </div>
+        
+        <div class="challenge-controls">
+            <div class="challenge-info">
+                <div class="attempts-remaining">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="attemptsText">3 attempts remaining</span>
+                </div>
+                <div class="challenge-timer">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span id="timeRemaining">Time remaining: 10:00</span>
+                </div>
+            </div>
+            
+            <div class="challenge-actions">
+                <button class="btn btn-secondary" id="cancelChallengeBtn">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+                <button class="btn btn-primary" id="submitChallengeBtn" disabled>
+                    <i class="fas fa-check"></i>
+                    Submit Verification
+                </button>
+            </div>
+        </div>
+        
+        <!-- Challenge Result -->
+        <div id="challengeResult" class="challenge-result hidden">
+            <!-- Success Result -->
+            <div id="successResult" class="result-content success">
+                <div class="result-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Verification Successful</h3>
+                <p>Your identity has been confirmed. You can now continue using the application.</p>
+                <button class="btn btn-primary" id="continueBtn">
+                    <i class="fas fa-arrow-right"></i>
+                    Continue to Dashboard
+                </button>
+            </div>
+            
+            <!-- Failure Result -->
+            <div id="failureResult" class="result-content failure">
+                <div class="result-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <h3>Verification Failed</h3>
+                <p id="failureMessage">The verification did not match your expected behavioral pattern.</p>
+                <div class="failure-actions">
+                    <button class="btn btn-primary" id="retryBtn">
+                        <i class="fas fa-redo"></i>
+                        Try Again
+                    </button>
+                    <button class="btn btn-secondary" id="contactSupportBtn">
+                        <i class="fas fa-life-ring"></i>
+                        Contact Support
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Lockout Result -->
+            <div id="lockoutResult" class="result-content lockout">
+                <div class="result-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <h3>Account Temporarily Locked</h3>
+                <p>Too many failed verification attempts. Your account has been temporarily locked for security.</p>
+                <div class="lockout-info">
+                    <div class="lockout-time">
+                        <i class="fas fa-clock"></i>
+                        <span>Unlock in: <strong id="lockoutCountdown">15:00</strong></span>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Real-time Analysis -->
+        <div class="analysis-panel" id="analysisPanel">
+            <div class="panel-header">
+                <h4>Real-time Analysis</h4>
+                <button class="panel-toggle" id="analysisPanelToggle">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="analysis-metric">
+                    <span class="metric-name">Typing Rhythm:</span>
+                    <span class="metric-status" id="rhythmStatus">Analyzing...</span>
+                </div>
+                <div class="analysis-metric">
+                    <span class="metric-name">Key Timing:</span>
+                    <span class="metric-status" id="timingStatus">Analyzing...</span>
+                </div>
+                <div class="analysis-metric">
+                    <span class="metric-name">Pattern Match:</span>
+                    <span class="metric-status" id="patternStatus">Analyzing...</span>
+                </div>
+                <div class="analysis-metric">
+                    <span class="metric-name">Confidence:</span>
+                    <span class="metric-status" id="confidenceStatus">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Challenge Help</h3>
+                <button class="modal-close" id="closeHelpModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Why am I seeing this challenge?</h4>
+                <p>Our system detected unusual patterns in your behavior that don't match your established profile. This could happen if:</p>
+                <ul>
+                    <li>You're using a different device or environment</li>
+                    <li>Your typing patterns have naturally evolved</li>
+                    <li>There's potential unauthorized access</li>
+                </ul>
+                
+                <h4>How to complete the challenge:</h4>
+                <ol>
+                    <li>Type naturally - don't try to change your style</li>
+                    <li>Take your time and be accurate</li>
+                    <li>Use your normal typing posture and hand position</li>
+                </ol>
+                
+                <h4>Need more help?</h4>
+                <p>If you continue having trouble, please contact our support team.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="help-button" id="helpBtn">
+        <i class="fas fa-question-circle"></i>
+    </div>
+    
+    <script src="/static/js/challenge.js"></script>
+</body>
+</html>
